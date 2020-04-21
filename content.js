@@ -1,15 +1,3 @@
-function ready(callback) {
-  // in case the document is already rendered
-  if (document.readyState != 'loading') callback();
-  // modern browsers
-  else if (document.addEventListener) document.addEventListener('DOMContentLoaded', callback);
-  // IE <= 8
-  else
-    document.attachEvent('onreadystatechange', function () {
-      if (document.readyState == 'complete') callback();
-    });
-}
-
 const inputs = [].slice.call(document.getElementsByTagName('input'));
 const buttons = [].slice.call(document.getElementsByTagName('button'));
 const mainInput = inputs.find((input) => input.value === 'stackoverflow.com');
@@ -23,8 +11,13 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
       poped = true;
       if (mainInput) {
         const value = window.prompt('Enter SO query', 'python list comprehension');
-        mainInput.value = `${value} stackoverflow.com`;
-        submitButton.click();
+        if (value) {
+          mainInput.value = `${value} stackoverflow.com`;
+          submitButton.click();
+        } else {
+          sendResponse(false);
+          return;
+        }
       }
       sendResponse(true);
     }
@@ -38,37 +31,3 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     sendResponse(true);
   }
 });
-
-// ready(function () {
-//   const urls = [].slice.call(document.getElementsByTagName('a'));
-//   console.log(urls);
-//   const firstSoUrl = urls.find((url) => url.href.includes('stackoverflow.com/questions'));
-//   console.log(firstSoUrl);
-//   if (allowClick) {
-//     firstSoUrl.click();
-//   }
-//   allowClick = false;
-// });
-
-// const inputs = [].slice.call(document.getElementsByTagName('input'));
-// const buttons = [].slice.call(document.getElementsByTagName('button'));
-// const mainInput = inputs.find((input) => input.value === 'stackoverflow.com');
-// const submitButton = buttons.find((b) => b.type === 'submit');
-
-// if (mainInput) {
-//   const value = window.prompt('Enter SO query', 'python list comprehension');
-//   mainInput.value = `${value} stackoverflow.com`;
-//   submitButton.click();
-// }
-
-// ready(() => {
-//   const urls = [].slice.call(document.getElementsByTagName('a'));
-//   console.log(urls);
-//   const firstSoUrl = urls.find((url) => url.href.includes('stackoverflow.com/questions'));
-//   console.log(firstSoUrl);
-//   // firstSoUrl.click();
-// });
-
-console.log(mainInput);
-
-console.log('content script loaded');

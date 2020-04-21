@@ -1,19 +1,21 @@
 {
-  "name": "Getting Started Example",
+  "name": "Brisk. Googling SO. Faster.",
   "version": "1.0",
-  "description": "Build an Extension!",
+  "description": "Google StackOverflow. Faster.",
   "permissions": [
+    "tabs",
     "activeTab",
     "declarativeContent",
     "storage"
   ],
   "background": {
     "scripts": [
+      "utils.js",
       "background.js"
     ],
     "persistent": false
   },
-  "page_action": {
+  "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
       "16": "images/get_started16.png",
@@ -28,6 +30,7 @@
         "*://*.google.com/*"
       ],
       "js": [
+        "utils.js",
         "content.js"
       ]
     }
@@ -38,20 +41,13 @@
     "48": "images/get_started48.png",
     "128": "images/get_started128.png"
   },
-  "options_page": "options.html",
+  // "options_page": "options.html",
   "commands": {
     "search-so": {
       "suggested_key": {
         "default": "Ctrl+Shift+0"
       },
       "description": "Search SO through Google!",
-      "global": true
-    },
-    "_execute_page_action": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+9"
-      },
-      "description": "Open page action!",
       "global": true
     }
   },
