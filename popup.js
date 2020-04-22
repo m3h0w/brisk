@@ -12,9 +12,9 @@ chrome.windows.getCurrent(undefined, (window) => {
 });
 
 changeColor.onclick = function (element) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.tabs.executeScript(tabs[0].id, { code: 'document.body.style.backgroundColor = "black";' });
-  });
+  // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  //   chrome.tabs.executeScript(tabs[0].id, { code: 'document.body.style.backgroundColor = "black";' });
+  // });
 
   chrome.windows.getCurrent(undefined, (window) => {
     chrome.storage.sync.get('window', function (data) {
