@@ -1,7 +1,7 @@
 {
-  "name": "Brisk. Googling SO. Faster.",
+  "name": "Brisk: Googling SO. Faster.",
   "version": "1.0",
-  "description": "Google StackOverflow. Faster.",
+  "description": "Use Google to find the top answer on StackOverflow faster.",
   "permissions": [
     "tabs",
     "activeTab",
@@ -32,7 +32,8 @@
       "js": [
         "utils.js",
         "content.js"
-      ]
+      ],
+      "run_at": "document_end"
     }
   ],
   "icons": {
