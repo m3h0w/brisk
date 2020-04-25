@@ -5,7 +5,6 @@ const submitButton = buttons.find((b) => b.type === 'submit');
 
 let poped = false;
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-  console.log(msg);
   if (msg.text === 'report_back') {
     if (!poped) {
       poped = true;
@@ -15,7 +14,9 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
           const value = window.prompt('Enter SO query', 'list comprehension');
           if (value) {
-            const searchValue = `${startString} ${value} stackoverflow.com`;
+            const searchValue = startString
+              ? `${startString} ${value} stackoverflow.com`
+              : `${value} stackoverflow.com`;
             chrome.storage.sync.set({ lookingFor: searchValue }, function () {
               console.log('startString set to python');
             });
@@ -46,9 +47,7 @@ chrome.storage.sync.get('lookingFor', function (data) {
   const correctlyFilledSearch = inputs.find((input) => input.value === lookingFor);
   if (correctlyFilledSearch) {
     const urls = [].slice.call(document.getElementsByTagName('a'));
-    console.log(urls);
     const firstSoUrl = urls.find((url) => url.href.includes('stackoverflow.com/questions'));
-    console.log(firstSoUrl);
     firstSoUrl.click();
     chrome.storage.sync.remove('lookingFor', function () {
       console.log('removed lookingFor variable from storage');
