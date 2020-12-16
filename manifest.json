@@ -1,6 +1,6 @@
 {
-  "name": "Brisk: Googling SO. Faster.",
-  "version": "1.0",
+  "name": "Brisk: google SO answers faster",
+  "version": "0.0.1",
   "description": "Use Google to find the top answer on StackOverflow faster.",
   "permissions": [
     "tabs",
