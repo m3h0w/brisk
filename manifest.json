@@ -13,7 +13,7 @@
       "utils.js",
       "background.js"
     ],
-    "persistent": false
+    "persistent": true
   },
   "browser_action": {
     "default_popup": "popup.html",
@@ -42,11 +42,11 @@
     "48": "images/get_started48.png",
     "128": "images/get_started128.png"
   },
-  // "options_page": "options.html",
   "commands": {
     "search-so": {
       "suggested_key": {
-        "default": "Ctrl+Shift+0"
+        "default": "Ctrl+Shift+9",
+        "mac": "Command+Shift+9"
       },
       "description": "Search SO through Google!",
       "global": true

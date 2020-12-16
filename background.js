@@ -4,6 +4,8 @@ function constructSearchUrl(searchQuery) {
   return `https://www.google.com/search?sourceid=chrome&ie=UTF-8&q=${searchQuery}%20stackoverflow.com`;
 }
 
+console.log('background is running');
+
 const SLEEP_TIME = 150;
 const MAX_MSG_TRIES = 50;
 
@@ -72,7 +74,15 @@ function createTabAndExecuteSoSearch(windowId) {
   });
 }
 
+chrome.commands.getAll(function (commands) {
+  const shortcut = commands.find((v) => v.name === 'search-so').shortcut;
+  chrome.storage.sync.set({ searchCommand: shortcut }, function () {
+    console.log('setting searchCommand to', searchCommand);
+  });
+});
+
 chrome.commands.onCommand.addListener(async function (command) {
+  console.log({ command });
   if (command === 'search-so') {
     chrome.storage.sync.get('window', function (data) {
       const windowId = data.window;

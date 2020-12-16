@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style>
-      button {
-        height: 30px;
-        width: 30px;
-        outline: none;
-      }
-    </style>
-  </head>
-  <body>
-    <h4 id="changeColorTitle">Click to use this Chrome window:</h4>
-    <button id="changeColor"></button>
-    <div>---</div>
-    <h4>Shortcut for triggering search:</h4>
-    <p>Ctrl+Shift+0</p>
-    <h4>Search starts with:</h4>
-    <input id="startString" />
-    <script src="popup.js"></script>
-  </body>
+
+<head>
+  <style>
+    button {
+      height: 30px;
+      width: 30px;
+      outline: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h4 id="changeColorTitle">Click to use this Chrome window:</h4>
+  <button id="changeColor"></button>
+  <div>---</div>
+  <h4>Shortcut for triggering search:</h4>
+  <p id="shortcut">Ctrl+Shift+0</p>
+  <h4>Search starts with:</h4>
+  <input id="startString" />
+  <script src="popup.js"></script>
+</body>
+
 </html>
