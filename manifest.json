@@ -4,8 +4,6 @@
   "description": "Use Google to find the top answer on StackOverflow faster.",
   "permissions": [
     "tabs",
-    "activeTab",
-    "declarativeContent",
     "storage"
   ],
   "background": {
