@@ -8,6 +8,8 @@ console.log('background is running');
 
 const SLEEP_TIME = 150;
 const MAX_MSG_TRIES = 50;
+const { USE_N_KEYS } = globalThis.settings;
+console.log(USE_N_KEYS);
 
 chrome.runtime.onInstalled.addListener(function () {
   chrome.windows.getCurrent(undefined, (window) => {
@@ -35,17 +37,13 @@ chrome.windows.onRemoved.addListener(function (removedWindowId) {
 
 function createTabAndExecuteSoSearch(windowId) {
   chrome.tabs.create({ windowId, url: constructSearchUrl('') }, async function (tab) {
-    // chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    //   if (changeInfo.status == 'complete') {
-    //     console.log('loading of the tab finished');
-    //   }
-    // });
+    chrome.windows.update(windowId, { focused: true, drawAttention: true });
     let sending = true;
     let counter = 0;
     let shouldClick = false;
     while (sending && counter < MAX_MSG_TRIES) {
       counter += 1;
-      await sleep(SLEEP_TIME);
+      await globalThis.sleep(SLEEP_TIME);
       chrome.tabs.sendMessage(tab.id, { text: 'report_back' }, function (resp) {
         if (resp === true || resp === false) {
           sending = false;
@@ -62,7 +60,7 @@ function createTabAndExecuteSoSearch(windowId) {
     counter = 0;
     while (sending && counter < MAX_MSG_TRIES) {
       counter += 1;
-      await sleep(SLEEP_TIME);
+      await globalThis.sleep(SLEEP_TIME);
       chrome.tabs.sendMessage(tab.id, { text: 'click' }, function (resp) {
         console.log('clicked', resp);
         if (resp) {
@@ -77,7 +75,7 @@ function createTabAndExecuteSoSearch(windowId) {
 chrome.commands.getAll(function (commands) {
   const shortcut = commands.find((v) => v.name === 'search-so').shortcut;
   chrome.storage.sync.set({ searchCommand: shortcut }, function () {
-    console.log('setting searchCommand to', searchCommand);
+    console.log('setting searchCommand to', shortcut);
   });
 });
 
@@ -102,5 +100,26 @@ chrome.commands.onCommand.addListener(async function (command) {
         }
       });
     });
+  }
+});
+
+chrome.tabs.onUpdated.addListener(function (tabId, change, tab) {
+  if (!tab.url) {
+    return;
+  }
+
+  let switchedIcon = false;
+  for (let index = 1; index <= USE_N_KEYS; index++) {
+    globalThis.getUrlValue(index.toString(), (url) => {
+      if (tab.url === url) {
+        chrome.browserAction.setIcon({ path: `./images/icon_${index}.png`, tabId });
+        console.log('matched');
+        switchedIcon = true;
+      }
+    });
+  }
+
+  if (!switchedIcon) {
+    chrome.browserAction.setIcon({ path: '', tabId });
   }
 });

@@ -1,22 +1,41 @@
-let changeColor = document.getElementById('changeColor');
-let changeColorTitle = document.getElementById('changeColorTitle');
-let startStringElement = document.getElementById('startString');
-let shortcutElement = document.getElementById('shortcut');
+const useThisWindowButtonElement = document.getElementById('use-this-window-button');
+const whichChromeWindowTitleElement = document.getElementById('which-chrome-window-title');
+const startStringElement = document.getElementById('start-string');
+const shortcutElement = document.getElementById('shortcut');
+const changeShortcutElement = document.getElementById('change-shortcut');
+
+const MANAGE_SHORTCUTS_URL = 'chrome://extensions/shortcuts';
+const openManageShortcutsTab = () => {
+  getWindowFromStorage((windowId) => {
+    chrome.tabs.create({ windowId, url: MANAGE_SHORTCUTS_URL }, async function (tab) {
+      chrome.tabs.update(tab.id, { active: true }, (tab) => {});
+    });
+  });
+};
+changeShortcutElement.onclick = openManageShortcutsTab;
+changeShortcutElement.style = 'cursor: pointer; width: 100%';
+
+const getWindowFromStorage = (callback) => {
+  chrome.storage.sync.get('window', function (data) {
+    const { window: windowId } = data;
+    callback(windowId);
+  });
+};
 
 chrome.windows.getCurrent(undefined, (window) => {
   chrome.storage.sync.get('window', function (data) {
     const { window: windowId } = data;
     if (windowId === window.id) {
-      changeColor.hidden = true;
-      changeColorTitle.textContent = 'Using this Chrome window';
+      useThisWindowButtonElement.hidden = true;
+      whichChromeWindowTitleElement.textContent = 'Using this Chrome window';
     }
   });
 });
 
-chrome.storage.sync.get('startString', function (data) {
+chrome.storage.sync.get('startString', (data) => {
   const { startString } = data;
   startStringElement.value = startString;
-  startStringElement.onchange = function (e) {
+  startStringElement.onchange = (e) => {
     chrome.storage.sync.set({ startString: e.target.value }, function () {});
   };
 });
@@ -26,23 +45,19 @@ chrome.storage.sync.get('searchCommand', function (data) {
   shortcutElement.innerText = searchCommand;
 });
 
-changeColor.onclick = function (element) {
-  // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-  //   chrome.tabs.executeScript(tabs[0].id, { code: 'document.body.style.backgroundColor = "black";' });
-  // });
+useThisWindowButtonElement.onclick = function (element) {
   chrome.windows.getCurrent(undefined, (window) => {
-    chrome.storage.sync.get('window', function (data) {
-      const { window: windowId } = data;
+    getWindowFromStorage(function (windowId) {
       if (windowId === window.id) {
-        changeColor.hidden = true;
-        changeColorTitle.textContent = 'Using this Chrome window';
+        useThisWindowButtonElement.hidden = true;
+        whichChromeWindowTitleElement.textContent = 'Using this Chrome window';
       }
     });
 
     chrome.storage.sync.remove({ window: window.id }, function () {
       console.log('Current window is ' + window.id);
-      changeColor.hidden = true;
-      changeColorTitle.textContent = 'Using this Chrome window';
+      useThisWindowButtonElement.hidden = true;
+      whichChromeWindowTitleElement.textContent = 'Using this Chrome window';
     });
   });
 };

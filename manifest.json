@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "description": "Use Google to find the top answer on StackOverflow faster.",
   "permissions": [
-    "tabs",
-    "storage"
+    "storage",
+    "tabs"
   ],
   "background": {
     "scripts": [
+      "settings.js",
       "utils.js",
       "background.js"
     ],
@@ -28,8 +29,20 @@
         "*://*.google.com/*"
       ],
       "js": [
+        "settings.js",
         "utils.js",
         "content.js"
+      ],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "*://*.stackoverflow.com/*"
+      ],
+      "js": [
+        "settings.js",
+        "utils.js",
+        "keyPressListener.js"
       ],
       "run_at": "document_end"
     }
